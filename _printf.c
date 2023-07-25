@@ -1,40 +1,39 @@
 #include "main.h"
 /**
- * _printf - prints formatted output to stdout
- * @format: format string containing zero or more directives
- *
- * Return: the number of characters printed (excluding the null byte)
+ * _printf - is a function that selects the correct function to print.
+ * @format: identifier to look for.
+ * Return: the length of the string.
  */
-int _printf(const char *format, ...)
+int _printf(const char *const format, ...)
 {
-	int count;
-	char *str;
-	va_list arg;
+	convert_match m[] = {
+		{"%s", printf_string}, {"%c", printf_char}, {"%%", printf_37}, {"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev}, {"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned}, {"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX}, {"%S", printf_exclusive_string}, {"%p", printf_pointer}};
 
-	va_start(arg, format);
-	count = 0;
-	while (*format != '\0')
+	va_list args;
+	int i = 0, j, len = 0;
+
+	va_start(args, format);
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+
+Here:
+	while (format[i] != '\0')
 	{
-		switch (*format)
+		j = 13;
+		while (j >= 0)
 		{
-		case 'c':
-			_putchar(va_arg(arg, int));
-			break;
-		case 's':
-			str = va_arg(arg, char *);
-			while (*str != '\0')
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
 			{
-				_putchar(*str);
-				str++;
+				len += m[j].f(args);
+				i = i + 2;
+				goto Here;
 			}
-			break;
-		case '%':
-			_putchar('%');
-			break;
+			j--;
 		}
-		format++;
-		count++;
+		_putchar(format[i]);
+		len++;
+		i++;
 	}
-	va_end(arg);
-	return (count);
+	va_end(args);
+	return (len);
 }
