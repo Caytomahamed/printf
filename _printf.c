@@ -1,4 +1,6 @@
 #include "main.h"
+
+int _printstring(char *s);
 /**
  * _printf - prints output according to a format
  * @format: the format string
@@ -8,47 +10,60 @@
  */
 int _printf(const char *format, ...)
 {
+	int count = 0, c;
+	char *s;
 	va_list args;
+
 	va_start(args, format);
-
-	int count = 0;
-
-	while (*format != '\0')
+	while (*format)
 	{
 		if (*format == '%')
 		{
 			format++;
 			if (*format == 'c')
 			{
-				char c = va_arg(args, int);
-				putchar(c);
+				c = va_arg(args, int);
+				_putchar(c);
 				count++;
 			}
 			else if (*format == 's')
 			{
-				char *s = va_arg(args, char *);
-				while (*s != '\0')
-				{
-					putchar(*s);
-					s++;
-					count++;
-				}
+				s = va_arg(args, char *);
+				count += _printstring(s);
 			}
 			else if (*format == '%')
 			{
-				putchar('%');
+				_putchar('%');
 				count++;
 			}
 		}
 		else
 		{
-			putchar(*format);
+			_putchar(*format);
 			count++;
 		}
 		format++;
 	}
-
 	va_end(args);
+	return (count);
+}
 
+/**
+ * _printstring - Prints a string to stdout
+ *
+ * @s: Pointer to the string to be printed
+ *
+ * Return: The number of characters printed
+ */
+
+int _printstring(char *s)
+{
+	int count = 0;
+	
+	while (*s)
+	{
+		_putchar(*s++);
+		count++;
+	}
 	return (count);
 }
