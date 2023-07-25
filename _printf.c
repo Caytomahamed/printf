@@ -1,50 +1,52 @@
 #include "main.h"
-#include <limits.h>
-#include <stdio.h>
 
 /**
- * _printf - produces output according to a format
- * @format: format string containing the characters and the specifiers
- * Description: this function will call the get_print() function that will
- * determine which printing function to call depending on the conversion
- * specifiers contained into fmt
- * Return: length of the formatted output string
+ * _printf - prints formatted output to stdout
+ * @format: format string containing zero or more directives
+ *
+ * Return: the number of characters printed (excluding the null byte)
  */
 int _printf(const char *format, ...)
 {
-	int (*pfunc)(va_list, flags_t *);
-	const char *p;
-	va_list arguments;
-	flags_t flags = {0, 0, 0};
+	int count;
+	char *str;
 
-	register int count = 0;
+	va_list arg;
 
-	va_start(arguments, format);
-	if (!format || (format[0] == '%' && !format[1]))
-		return (-1);
-	if (format[0] == '%' && format[1] == ' ' && !format[2])
-		return (-1);
-	for (p = format; *p; p++)
+	va_start(arg, format);
+
+	count = 0;
+
+	while (*format != '\0')
 	{
-		if (*p == '%')
-		{
-			p++;
-			if (*p == '%')
-			{
-				count += _putchar('%');
-				continue;
-			}
-			while (get_flag(*p, &flags))
-				p++;
-			pfunc = get_print(*p);
-			count += (pfunc)
-				? pfunc(arguments, &flags)
-				: _printf("%%%c", *p);
-		} else
-			count += _putchar(*p);
-	}
-	_putchar(-1);
-	va_end(arguments);
-	return (count);
 
+		switch (*format)
+		{
+		case 'c':
+		{
+			_putchar(va_arg(arg, int));
+			break;
+		}
+		case 's':
+		{
+			str = va_arg(arg, char *);
+			while (*str != '\0')
+			{
+				_putchar(*str);
+				str++;
+			}
+			break;
+		}
+		case '%':
+		{
+			_putchar('%');
+			break;
+		}
+		}
+		format++;
+		count++;
+	}
+
+	va_end(arg);
+	return (count);
 }
