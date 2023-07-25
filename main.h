@@ -21,5 +21,6 @@ typedef struct format
 } convert_match;
 
 int _putchar(char c);
+int _printf(const char *format, ...);
 
 #endif
