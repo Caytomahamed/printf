@@ -13,6 +13,7 @@ int main(void)
 
     len = _printf("Let's print a simple sentence.\n");
     len2 = printf("Let's print a simple sentence.\n");
+    _printf("Complete the sentence: You %s nothing, Jon Snow.\n", (char *)0);
     fflush(stdout);
     if (len != len2)
     {

@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 int _printstring(char *s);
 /**
@@ -59,7 +60,13 @@ int _printf(const char *format, ...)
 int _printstring(char *s)
 {
 	int count = 0;
-	
+
+	if(s == NULL)
+	{
+		_putchar(0);
+		return (count);
+	}
+
 	while (*s)
 	{
 		_putchar(*s++);
