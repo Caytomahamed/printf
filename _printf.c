@@ -1,7 +1,10 @@
-#include "main.h"
 #include <stdio.h>
+#include <stdarg.h>
+#include <unistd.h>
 
-int _printstring(char *s);
+int _strlen(char *s);
+void _printBuffer(char *c, long unsigned int n);
+
 /**
  * _printf - prints output according to a format
  * @format: the format string
@@ -11,7 +14,8 @@ int _printstring(char *s);
  */
 int _printf(const char *format, ...)
 {
-	int count = 0, c;
+	int count = 0;
+	long unsigned int len;
 	char *s;
 	va_list args;
 
@@ -23,24 +27,26 @@ int _printf(const char *format, ...)
 			format++;
 			if (*format == 'c')
 			{
-				c = va_arg(args, int);
-				_putchar(c);
+				char c = va_arg(args, int);
+				_printBuffer(&c, 1);
 				count++;
 			}
 			else if (*format == 's')
 			{
 				s = va_arg(args, char *);
-				count += _printstring(s);
+				len = _strlen(s);
+				_printBuffer(s, len);
+				count += len;
 			}
 			else if (*format == '%')
 			{
-				_putchar('%');
+				_printBuffer("%", 1);
 				count++;
 			}
 		}
 		else
 		{
-			_putchar(*format);
+			_printBuffer((char *)format, 1);
 			count++;
 		}
 		format++;
@@ -50,27 +56,31 @@ int _printf(const char *format, ...)
 }
 
 /**
- * _printstring - Prints a string to stdout
+ * _strlen - Returns the length of a string
+ * @s: the string to measure
  *
- * @s: Pointer to the string to be printed
- *
- * Return: The number of characters printed
+ * Return: the length of the string
  */
-
-int _printstring(char *s)
+int _strlen(char *s)
 {
-	int count = 0;
-
-	if(s == NULL)
-	{
-		_putchar(0);
-		return (count);
-	}
-
+	int len = 0;
 	while (*s)
 	{
-		_putchar(*s++);
-		count++;
+		len++;
+		s++;
 	}
-	return (count);
+	return (len);
+}
+
+/**
+ * _printBuffer - Prints a buffer to stdout
+ * @c: the buffer to print
+ * @n: the number of characters to print
+ *
+ * Return: void
+ */
+void _printBuffer(char *c, long unsigned int n)
+{
+	if (n > 0)
+		write(1, c, n);
 }
