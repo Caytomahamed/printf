@@ -1,86 +1,82 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include "main.h"
+/**
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set argpropriately.
+ */
 
-int _strlen(char *s);
-void _printBuffer(char *c, long unsigned int n);
+int _putchar(char c)
+{
+	return (write(1, &c, 1));
+}
 
 /**
- * _printf - prints output according to a format
- * @format: the format string
+ * print_string - prints an array of string characters
+ * @str: the variable to print
  *
- * Return: the number of characters printed (excluding the null byte used to
- * end output to strings)
+ */
+
+int print_string(char *str)
+{
+	int i = 0;
+
+	if (str == NULL)
+	{
+		_printf("(null)");
+		return (6); 
+	}
+
+	while (str[i] != '\0')
+	{
+		_putchar(str[i]);
+		i++;
+	}
+	return (i);
+}
+
+/**
+ * _printf - Produces output according to a format
+ * @format: The format of the string.
+ * Return: The number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	int count = 0;
-	long unsigned int len;
-	char *s;
-	va_list args;
+	va_list arg;
+	unsigned int j = 0, n = 0;
 
-	va_start(args, format);
-	while (*format)
+	va_start(arg, format);
+	while (format[j] != '\0')
 	{
-		if (*format == '%')
+		if (format[j] == '%')
 		{
-			format++;
-			if (*format == 'c')
+			switch (format[j + 1])
 			{
-				char c = va_arg(args, int);
-				_printBuffer(&c, 1);
-				count++;
+			case 'c':
+				_putchar(va_arg(arg, int));
+				n++;
+				break;
+			case 's':
+				n += print_string(va_arg(arg, char *));
+				break;
+			case '%':
+				_putchar('%');
+				n++;
+				break;
 			}
-			else if (*format == 's')
-			{
-				s = va_arg(args, char *);
-				len = _strlen(s);
-				_printBuffer(s, len);
-				count += len;
-			}
-			else if (*format == '%')
-			{
-				_printBuffer("%", 1);
-				count++;
-			}
+
+			j++;
 		}
 		else
 		{
-			_printBuffer((char *)format, 1);
-			count++;
+			_putchar(format[j]);
+			n++;
 		}
-		format++;
+		j++;
 	}
-	va_end(args);
-	return (count);
-}
-
-/**
- * _strlen - Returns the length of a string
- * @s: the string to measure
- *
- * Return: the length of the string
- */
-int _strlen(char *s)
-{
-	int len = 0;
-	while (*s)
-	{
-		len++;
-		s++;
-	}
-	return (len);
-}
-
-/**
- * _printBuffer - Prints a buffer to stdout
- * @c: the buffer to print
- * @n: the number of characters to print
- *
- * Return: void
- */
-void _printBuffer(char *c, long unsigned int n)
-{
-	if (n > 0)
-		write(1, c, n);
+	va_end(arg);
+	return (n);
 }
