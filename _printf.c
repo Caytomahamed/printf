@@ -18,6 +18,7 @@ int _putchar(char c)
  * print_string - prints an array of string characters
  * @str: the variable to print
  *
+ * Return: length of the string
  */
 
 int print_string(char *str)
@@ -27,7 +28,7 @@ int print_string(char *str)
 	if (str == NULL)
 	{
 		_printf("(null)");
-		return (6); 
+		return (6);
 	}
 
 	while (str[i] != '\0')
