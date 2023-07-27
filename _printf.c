@@ -49,6 +49,12 @@ int _printf(const char *format, ...)
 	va_list arg;
 	unsigned int j = 0, n = 0;
 
+	if (format == NULL)
+	{
+		_printf("(null)\n");
+		return (6);
+	}
+
 	va_start(arg, format);
 	while (format[j] != '\0')
 	{
